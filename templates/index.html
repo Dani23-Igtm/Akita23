@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargador de Videos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+        <h1 class="text-2xl font-semibold text-center mb-4">Descargar Video</h1>
+        
+        <form id="videoForm" method="POST">
+            <div class="mb-4">
+                <label for="video_url" class="block text-sm font-medium text-gray-700">URL del Video</label>
+                <input type="text" name="video_url" id="video_url" required class="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Descargar</button>
+        </form>
+        
+        <div class="mt-4" id="progressDiv" style="display: none;">
+            <label for="progress" class="block text-sm font-medium text-gray-700">Progreso de descarga</label>
+            <progress id="progress" class="w-full h-2" value="0" max="100"></progress>
+        </div>
+
+        <div class="mt-4 text-center" id="message"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#videoForm").submit(function(e) {
+                e.preventDefault();
+                
+                let videoUrl = $("#video_url").val();
+                
+                $("#progressDiv").show(); // Mostrar la barra de progreso
+                $("#message").text("Extrayendo datos...");
+                $("#progress").val(20);  // Establecer el progreso inicial
+
+                $.post({
+                    url: "/",
+                    data: { video_url: videoUrl },
+                    success: function(response) {
+                        // Simulación de progreso en la descarga
+                        let progress = 50; // Ajustar esto a medida que avanzan las etapas
+                        $("#progress").val(progress);
+
+                        setTimeout(() => {
+                            progress = 100;
+                            $("#progress").val(progress);
+                            $("#message").text("¡Descarga completa!");
+                        }, 3000);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
